@@ -81,7 +81,6 @@
   <script>
     function moveRacket(operation) {
       const racket = document.querySelector(".racket");
-      console.log(operation);
       if (
         operation === "plus" &&
         racket.offsetWidth + racket.offsetLeft >= window.innerWidth
@@ -97,8 +96,7 @@
     }
 
     let intervalId;
-    function handleMouseDown(e) {
-      console.log(e);
+    function handleHold(e) {
       intervalId = setInterval(() => {
         moveRacket(e.srcElement.dataset.side), 10000;
       });
@@ -106,14 +104,11 @@
 
     const arrows = document.querySelectorAll("p[data-side]");
     arrows.forEach((arrow) => {
-      arrow.addEventListener("click", (e) =>
-        moveRacket(e.srcElement.dataset.side)
-      );
-      arrow.addEventListener("mousedown", handleMouseDown);
-      arrow.addEventListener("mouseup", () => {
+      arrow.addEventListener("pointerdown", handleHold);
+      arrow.addEventListener("pointereup", () => {
         clearInterval(intervalId);
       });
-      arrow.addEventListener("mouseout", () => {
+      arrow.addEventListener("pointerout", () => {
         clearInterval(intervalId);
       });
     });
