@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pong</title>
+  </head>
+  <body>
+    <style>
+      :root {
+        --layout-height: 100vh;
+        --layout-width: 100vw;
+        --controls-height: 10vh;
+        --racket-width: 15vw;
+        --railway-height: 2vh;
+      }
+      html,
+      body {
+        height: var(--layout-height);
+        width: var(--layout-width);
+      }
+
+      body {
+        margin: 0;
+      }
+
+      .railway {
+        width: var(--layout-width);
+        position: absolute;
+        height: var(--railway-height);
+        bottom: var(--controls-height);
+      }
+
+      .controls {
+        width: var(--layout-width);
+        position: absolute;
+        height: var(--controls-height);
+        bottom: 0;
+        display: flex;
+      }
+
+      .controls p {
+        width: calc(0.5 * var(--layout-width));
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .board {
+        width: var(--layout-width);
+        height: calc(var(--layout-height) - 2 * var(--controls-height));
+        bottom: calc(2 * var(--controls-height));
+      }
+
+      .racket {
+        position: relative;
+        width: var(--racket-width);
+        background-color: black;
+        height: var(--railway-height);
+        border-radius: 10px;
+      }
+
+      p[data-side] {
+        line-height: var(--controls-height);
+        font-size: var(--controls-height);
+        margin: 0;
+      }
+
+      p[data-side]:hover {
+        color: grey;
+      }
+    </style>
+    <div class="board"></div>
+    <div class="railway">
+      <div class="racket" style="left: 43vw"></div>
+    </div>
+    <div class="controls">
+      <p data-side="minus">&#8592;</p>
+      <p data-side="plus">&#8594;</p>
+    </div>
+  </body>
+  <script>
+    function moveRacket(operation) {
+      const racket = document.querySelector(".racket");
+      console.log(operation);
+      if (
+        operation === "plus" &&
+        racket.offsetWidth + racket.offsetLeft >= window.innerWidth
+      ) {
+        return;
+      }
+      const distance = Number(racket.style.left.replace(/vw/g, ""));
+      const move = Math.max(
+        0,
+        operation === "plus" ? distance + 0.1 : distance - 0.1
+      );
+      racket.style.left = `${move}vw`;
+    }
+
+    let intervalId;
+    function handleMouseDown(e) {
+      console.log(e);
+      intervalId = setInterval(() => {
+        moveRacket(e.srcElement.dataset.side), 10000;
+      });
+    }
+
+    const arrows = document.querySelectorAll("p[data-side]");
+    arrows.forEach((arrow) => {
+      arrow.addEventListener("click", (e) =>
+        moveRacket(e.srcElement.dataset.side)
+      );
+      arrow.addEventListener("mousedown", handleMouseDown);
+      arrow.addEventListener("mouseup", () => {
+        clearInterval(intervalId);
+      });
+      arrow.addEventListener("mouseout", () => {
+        clearInterval(intervalId);
+      });
+    });
+  </script>
+</html>
