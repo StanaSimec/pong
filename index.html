@@ -21,6 +21,8 @@
 
       body {
         margin: 0;
+        overflow: hidden;
+        position: fixed;
       }
 
       .railway {
@@ -105,7 +107,7 @@
     const arrows = document.querySelectorAll("p[data-side]");
     arrows.forEach((arrow) => {
       arrow.addEventListener("pointerdown", handleHold);
-      arrow.addEventListener("pointereup", () => {
+      arrow.addEventListener("pointerup", () => {
         clearInterval(intervalId);
       });
       arrow.addEventListener("pointerout", () => {
